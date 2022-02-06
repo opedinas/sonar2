@@ -2,30 +2,44 @@ pipeline {
     agent any
     stages {
         stage('Git checkout') {
-            steps { 
-                git 'https://github.com/opedinas/sonar2.git'
-            }
-
-
-        }
-        stage('Build') {
             steps {
-               sh 'cd MywebApp && mvn clean package'
-            } 
-        }
-        stage('test') {
-            steps {
-                sh 'cd MywebApp && mvn test'
+               git git 'https://github.com/opedinas/sonar2.git'
             }
         }
-        stage ('deploy to tomcat') {
+       stage('Build') {
+            steps {
+               sh ''' cd MywebApp && mvn clean package'''
+            }
+        }
+      stage('Test') {
+            steps {
+                sh ' cd MywebApp && mvn test'
+            }
+      }
+
+     stage ('Code Qualty Scan') {
+            
+           steps {
+                  withSonarQubeEnv('sonar') {
+             sh "mvn -f MywebApp/pom.xml sonar:sonar"      
+               }
+            }
+       }
+
+      stage('Quality gate') {
+
+          steps {
+                 waitForQualityGate abortPipeline: true
+              }
+          }
+
+      stage('deploy to tomcat') {
             steps {
                 deploy adapters: [tomcat9(credentialsId: '765c974f-80eb-4d22-9e54-493d8887e791', path: '', url: 'http://107.23.9.85:8080/'), tomcat9(path: '', url: '')], contextPath: 'leadgen', war: '**/*.war'
-            } 
-
                 
-            
-        }
-    
+            }   
+                
+      }        
+                
     }
 }   
