@@ -3,7 +3,7 @@ pipeline {
     stages {
         stage('Git checkout') {
             steps { 
-                git 'https://github.com/opedinas/devopyusf.git'
+                git 'https://github.com/opedinas/sonar2.git'
             }
 
 
