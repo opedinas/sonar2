@@ -14,8 +14,7 @@
         <title>ope</title>
         <meta name="description" content="" />
         <meta name="keywords" content="" />
-        <meta name="author" content="
-">
+        <meta name="author" content="">
         <!-- favicon -->
         <link rel="shortcut icon" href="images/icon/favicon.ico">
         <!-- animation -->
