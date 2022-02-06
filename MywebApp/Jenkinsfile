@@ -10,6 +10,18 @@ pipeline {
             steps {
                sh ''' cd MywebApp && mvn clean package'''
             }
+ pipeline {
+    agent any
+    stages {
+        stage('Git checkout') {
+            steps {
+               git git 'https://github.com/opedinas/sonar2.git'
+            }
+        }
+       stage('Build') {
+            steps {
+               sh ''' cd MywebApp && mvn clean package'''
+            }
         }
       stage('Test') {
             steps {
@@ -17,21 +29,27 @@ pipeline {
             }
       }
 
-     stage ('Code Qualty Scan') {
-            
-           steps {
-                  withSonarQubeEnv('sonar') {
-             sh "mvn -f MywebApp/pom.xml sonar:sonar"      
-               }
+      stage('SonarQube analysis 1') {
+            steps {
+                sh 'mvn clean package sonar:sonar'
             }
-       }
-
-      stage('Quality gate') {
-
-          steps {
-                 waitForQualityGate abortPipeline: true
-              }
-          }
+        }
+      stage("Quality Gate 1") {
+            steps {
+                waitForQualityGate abortPipeline: true
+            }
+        }
+      stage('SonarQube analysis 2') {
+            steps {
+                sh 'gradle sonarqube'
+            }
+        }
+      stage("Quality Gate 2") {
+            steps {
+                waitForQualityGate abortPipeline: true
+            }
+        }
+    
 
       stage('deploy to tomcat') {
             steps {
