@@ -18,6 +18,22 @@ pipeline {
                 sh 'cd MywebApp && mvn test'
             }
         }
+        stage ('Code Qualty Scan') {
+            
+           steps {
+                  withSonarQubeEnv('sonar') {
+             sh "mvn -f MywebApp/pom.xml sonar:sonar"      
+               }
+            }
+       }
+
+         stage('Quality gate') {
+
+          steps {
+                 waitForQualityGate abortPipeline: true
+              }
+          }
+        
         
         stage ('deploy to tomcat') {
             steps {
