@@ -29,7 +29,7 @@ pipeline {
 
         stage ('deploy to tomcat') {
             steps {
-              deploy adapters: [tomcat9(credentialsId: '2ee6d9f2-dedf-449f-af47-8407588ede79', path: '', url: 'http://54.163.78.108')], contextPath: 'leadgen', war: '**/*.war'
+             deploy adapters: [tomcat9(credentialsId: '2ee6d9f2-dedf-449f-af47-8407588ede79', path: '', url: 'http://54.163.78.108:8080/')], contextPath: 'leadgen', war: '**/*.war'
             } 
 
                 
